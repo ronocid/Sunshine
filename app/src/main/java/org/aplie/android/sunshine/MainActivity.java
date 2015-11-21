@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(LOG_TAG, "OnCreate");
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
@@ -60,4 +61,26 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG,"Couldn't call "+ location+", no");
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "OnStart");
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "OnResume");    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "OnPause");    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "OnStop");    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "OnDestroy");    }
 }
