@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 import android.text.format.Time;
 
 public class WeatherContract {
-    public static final String CONTENT_AUTHORITY = "com.example.android.sunshine.app";
+    public static final String CONTENT_AUTHORITY = "org.aplie.android.sunshine";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_WEATHER = "weather";
     public static final String PATH_LOCATION = "location";
@@ -59,7 +59,7 @@ public class WeatherContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
         public static Uri buildWeatherLocation(String locationSetting) {
-            return null;
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
         public static Uri buildWeatherLocationWithStartDate(
