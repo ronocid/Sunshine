@@ -21,7 +21,7 @@ import org.aplie.android.sunshine.data.WeatherContract;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private ForecastAdapter mForecastAdapter;
-    private static final int MY_LOADER_ID = 500;
+    private static final int LOADER_ID_FORECAST = 500;
     private static final String[] FORECAST_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
             WeatherContract.WeatherEntry.COLUMN_DATE,
@@ -131,7 +131,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MY_LOADER_ID,null,this);
+        getLoaderManager().initLoader(LOADER_ID_FORECAST,null,this);
         super.onActivityCreated(savedInstanceState);
     }
 }

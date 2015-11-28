@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.aplie.android.sunshine.data.WeatherContract;
-
 public class ForecastAdapter extends CursorAdapter{
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
