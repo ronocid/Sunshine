@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
     public static class DetailFragment extends Fragment {
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
         private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
-        private String forecast;
+        private String mForecastStr;
         private ShareActionProvider mShareActionProvider;
 
         public DetailFragment() {
@@ -63,10 +63,12 @@ public class DetailActivity extends AppCompatActivity {
 
             Intent intent = getActivity().getIntent();
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            TextView text = (TextView)rootView.findViewById(R.id.text_view_text);
-            if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-                forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
-                text.setText(forecast);
+            if(intent != null){
+                mForecastStr = intent.getDataString();
+            }
+
+            if(null != mForecastStr){
+                ((TextView)rootView.findViewById(R.id.text_view_text)).setText(mForecastStr);
             }
             return rootView;
         }
@@ -88,7 +90,7 @@ public class DetailActivity extends AppCompatActivity {
         private Intent createShareForecastIntent() {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, forecast + FORECAST_SHARE_HASHTAG);
+            intent.putExtra(Intent.EXTRA_TEXT, mForecastStr + FORECAST_SHARE_HASHTAG);
             setShareIntent(intent);
             return intent;
         }
