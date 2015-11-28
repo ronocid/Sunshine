@@ -10,15 +10,18 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "OnCreate");
+        mLocation = Utility.getPreferredLocation(this);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(),FORECASTFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -67,17 +70,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(LOG_TAG, "OnResume");    }
+        Log.d(LOG_TAG, "OnResume");
+        String location = Utility.getPreferredLocation(this);
+        if(location != null && !location.equals(mLocation)){
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if(null != ff){
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "OnPause");    }
+        Log.d(LOG_TAG, "OnPause");
+    }
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(LOG_TAG, "OnStop");    }
+        Log.d(LOG_TAG, "OnStop");
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(LOG_TAG, "OnDestroy");    }
+        Log.d(LOG_TAG, "OnDestroy");
+    }
 }
