@@ -6,6 +6,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ForecastAdapter extends CursorAdapter{
@@ -39,7 +40,22 @@ public class ForecastAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        //TextView tv = (TextView)view;
-        //tv.setText(convertCursorRowToUXFormat(cursor));
+        ImageView imageWeather = (ImageView) view.findViewById(R.id.list_item_icon);
+        TextView tvDate = (TextView) view.findViewById(R.id.list_item_date_textview);
+        TextView tvForecast = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+        TextView tvHight = (TextView) view.findViewById(R.id.list_item_high_textview);
+        TextView tvLow = (TextView) view.findViewById(R.id.list_item_low_textview);
+
+
+        boolean isMetric = Utility.isMetric(context);
+        Long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
+        String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+        Double max = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
+        Double min = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+
+        tvDate.setText(Utility.getFriendlyDayString(context,date));
+        tvForecast.setText(description);
+        tvHight.setText(Utility.formatTemperature(max,isMetric)+"º");
+        tvLow.setText(Utility.formatTemperature(min,isMetric)+"º");
     }
 }
