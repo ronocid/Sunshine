@@ -20,6 +20,7 @@ import org.aplie.android.sunshine.data.WeatherContract;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SELECTED_KEY = "selected";
+    public static final int DEFAULT_POSITION = 0;
     private ForecastAdapter mForecastAdapter;
     private static final int LOADER_ID_FORECAST = 500;
     private static final String[] FORECAST_COLUMNS = {
@@ -95,12 +96,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback)getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)));
+                    ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)));
                 }
                 mPosition = position;
             }
         });
-
         if(null != savedInstanceState && savedInstanceState.containsKey(SELECTED_KEY)){
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
@@ -159,6 +159,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public interface Callback{
-        public void onItemSelected(Uri dateUri);
+        void onItemSelected(Uri dateUri);
     }
 }
