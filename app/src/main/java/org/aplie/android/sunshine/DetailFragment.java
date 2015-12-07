@@ -38,6 +38,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView tvLow;
     private TextView tvHight;
     private TextView tvDate;
+    private TextView tvDay;
 
     private static final String[] FORECAST_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -64,6 +65,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_WEATHER_CONDITION_ID = 9;
     private Uri mUri;
 
+
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -78,11 +80,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         imageWeather = (ImageView)view.findViewById(R.id.fragment_detail_icon);
+        tvDay = (TextView) view.findViewById(R.id.fragment_detail_day_textview);
         tvDate = (TextView) view.findViewById(R.id.fragment_detail_date_textview);
         tvForecast = (TextView) view.findViewById(R.id.fragment_detail_forecast_textview);
         tvHight = (TextView) view.findViewById(R.id.fragment_detail_high_textview);
         tvLow = (TextView) view.findViewById(R.id.fragment_detail_low_textview);
-        tvHumidity = (TextView) view.findViewById(R.id.lfragment_detail_humidity_textview);
+        tvHumidity = (TextView) view.findViewById(R.id.fragment_detail_humidity_textview);
         tvWind = (TextView) view.findViewById(R.id.fragment_detail_wind_textview);
         tvPressure = (TextView) view.findViewById(R.id.fragment_detail_pressure_textview);
 
@@ -133,7 +136,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         boolean isMetric = Utility.isMetric(getActivity());
 
-        String dateString = Utility.getFriendlyDayString(getActivity(), data.getLong(COL_WEATHER_DATE));
+        long date = data.getLong(COL_WEATHER_DATE);
+        String friendlyDateText = Utility.getDayName(getActivity(), date);
+        String dateString = Utility.getFormattedMonthDay(getActivity(), date);
         String weatherDescription = data.getString(COL_WEATHER_DESC);
         String maxTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
         String minTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
@@ -142,6 +147,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String pressure = getActivity().getResources().getString(R.string.format_pressure,data.getFloat(COL_WEATHER_PRESSURE));
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
+        tvDay.setText(friendlyDateText);
         tvDate.setText(dateString);
         tvForecast.setText(weatherDescription);
         tvHight.setText(maxTemperature);
