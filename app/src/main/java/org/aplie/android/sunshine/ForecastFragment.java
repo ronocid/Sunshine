@@ -1,6 +1,5 @@
 package org.aplie.android.sunshine;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import android.widget.ListView;
 import org.aplie.android.sunshine.data.WeatherContract;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String SELECTED_KEY = "selected";
     private ForecastAdapter mForecastAdapter;
     private static final int LOADER_ID_FORECAST = 500;
     private static final String[] FORECAST_COLUMNS = {
@@ -44,6 +44,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
     private int mPosition;
+    private ListView listView;
 
     public ForecastFragment() {
     }
@@ -83,7 +84,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter = new ForecastAdapter(getActivity(),null,0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listView = (ListView) rootView.findViewById(R.id.listview_forecast);
 
         listView.setAdapter(mForecastAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,6 +99,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 mPosition = position;
             }
         });
+
+        if(null != savedInstanceState && savedInstanceState.containsKey(SELECTED_KEY)){
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
         return rootView;
     }
 
@@ -114,6 +119,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         mForecastAdapter.swapCursor(cursor);
+        if(mPosition != ListView.INVALID_POSITION){
+            listView.setSelection(mPosition);
+        }
     }
 
     @Override
@@ -123,13 +131,21 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(LOADER_ID_FORECAST,null,this);
+        getLoaderManager().initLoader(LOADER_ID_FORECAST, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     public void onLocationChanged(){
         updateWeather();
         getLoaderManager().restartLoader(LOADER_ID_FORECAST,null,this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mPosition != ListView.INVALID_POSITION){
+            outState.putInt(SELECTED_KEY,mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     public interface Callback{
