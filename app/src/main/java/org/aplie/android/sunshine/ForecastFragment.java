@@ -45,6 +45,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LONG = 8;
     private int mPosition;
     private ListView listView;
+    private boolean mUseTodayLayout;
 
     public ForecastFragment() {
     }
@@ -103,6 +104,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if(null != savedInstanceState && savedInstanceState.containsKey(SELECTED_KEY)){
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
+
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         return rootView;
     }
 
@@ -137,7 +140,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void onLocationChanged(){
         updateWeather();
-        getLoaderManager().restartLoader(LOADER_ID_FORECAST,null,this);
+        getLoaderManager().restartLoader(LOADER_ID_FORECAST, null, this);
     }
 
     @Override
@@ -146,6 +149,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             outState.putInt(SELECTED_KEY,mPosition);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        mUseTodayLayout = useTodayLayout;
+        if (mForecastAdapter != null) {
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
     }
 
     public interface Callback{
