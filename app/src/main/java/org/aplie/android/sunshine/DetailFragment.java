@@ -59,6 +59,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_WEATHER_PRESSURE = 6;
     static final int COL_WEATHER_WIND_SPEED = 7;
     static final int COL_WEATHER_DEGRESS = 8;
+    static final int COL_WEATHER_CONDITION_ID = 9;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -110,7 +111,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getActivity().getIntent();
-        if(intent == null){
+        if(intent == null || intent.getData() == null){
             return null;
         }
 
@@ -132,6 +133,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String humidity = getActivity().getResources().getString(R.string.format_humidity,data.getFloat(COL_WEATHER_HUMDITY));
         String wind = Utility.getFormattedWind(getActivity(), data.getFloat(COL_WEATHER_WIND_SPEED), data.getFloat(COL_WEATHER_DEGRESS));
         String pressure = getActivity().getResources().getString(R.string.format_pressure,data.getFloat(COL_WEATHER_PRESSURE));
+        int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
         tvDate.setText(dateString);
         tvForecast.setText(weatherDescription);
@@ -140,6 +142,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         tvHumidity.setText(humidity);
         tvWind.setText(wind);
         tvPressure.setText(pressure);
+        imageWeather.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         mForecast = String.format("%s - %s - %s/%s",dateString,weatherDescription,maxTemperature,minTemperature);
         if (mShareActionProvider != null) {
