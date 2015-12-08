@@ -65,7 +65,7 @@ public class ForecastAdapter extends CursorAdapter{
         Double max = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
         Double min = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
 
-
+        viewHolder.imageWeather.setContentDescription(description);
         viewHolder.tvDate.setText(Utility.getFriendlyDayString(context,date));
         viewHolder.tvForecast.setText(description);
         viewHolder.tvHight.setText(Utility.formatTemperature(context,max,isMetric));

@@ -156,6 +156,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         tvWind.setText(wind);
         tvPressure.setText(pressure);
         imageWeather.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+        imageWeather.setContentDescription(weatherDescription);
 
         mForecast = String.format("%s - %s - %s/%s",dateString,weatherDescription,maxTemperature,minTemperature);
         if (mShareActionProvider != null) {
