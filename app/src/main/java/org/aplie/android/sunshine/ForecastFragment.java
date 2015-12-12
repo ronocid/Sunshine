@@ -82,6 +82,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis()+5000,pendingIntent);*/
         SunshineSyncAdapter.syncImmediately(getActivity());
+
     }
 
     @Override

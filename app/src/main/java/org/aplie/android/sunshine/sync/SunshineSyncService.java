@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.aplie.android.sunshine.sync.SunshineSyncAdapter;
-
 public class SunshineSyncService extends Service {
     private static final Object sSyncAdapterLock = new Object();
     private static SunshineSyncAdapter sSunshineSyncAdapter = null;
