@@ -1,13 +1,8 @@
 package org.aplie.android.sunshine;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -22,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.aplie.android.sunshine.data.WeatherContract;
-import org.aplie.android.sunshine.service.SunshineService;
+import org.aplie.android.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SELECTED_KEY = "selected";
@@ -80,12 +75,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        Intent intentAlarm = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        /*Intent intentAlarm = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
         intentAlarm.putExtra(SunshineService.LOCATION_QUERY_EXTRA,Utility.getPreferredLocation(getActivity()));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis()+5000,pendingIntent);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis()+5000,pendingIntent);*/
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override
