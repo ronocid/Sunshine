@@ -44,6 +44,8 @@
             android:enabled="true"
             android:exported="true">
         </provider>
+
+        <service android:name=".service.SunshineService" />
     </application>
 
 </manifest>
