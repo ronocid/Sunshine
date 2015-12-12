@@ -1,8 +1,10 @@
 package org.aplie.android.sunshine.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import org.aplie.android.sunshine.BuildConfig;
+import org.aplie.android.sunshine.Utility;
 import org.aplie.android.sunshine.data.WeatherContract;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -248,6 +251,15 @@ public class SunshineService extends IntentService{
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+        }
+    }
+
+    static public class AlarmReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent sendIntent = new Intent(context, SunshineService.class);
+            sendIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, intent.getStringExtra(LOCATION_QUERY_EXTRA));
+            context.startService(sendIntent);
         }
     }
 }

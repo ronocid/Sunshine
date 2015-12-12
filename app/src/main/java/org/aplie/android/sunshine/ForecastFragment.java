@@ -1,9 +1,13 @@
 package org.aplie.android.sunshine;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -76,12 +80,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,Utility.getPreferredLocation(getActivity()));
-        getActivity().startService(intent);
-        /*FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);*/
+        Intent intentAlarm = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        intentAlarm.putExtra(SunshineService.LOCATION_QUERY_EXTRA,Utility.getPreferredLocation(getActivity()));
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis()+5000,pendingIntent);
     }
 
     @Override
