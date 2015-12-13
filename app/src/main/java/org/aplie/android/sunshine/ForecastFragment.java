@@ -1,5 +1,6 @@
 package org.aplie.android.sunshine;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,7 @@ import org.aplie.android.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SELECTED_KEY = "selected";
+    private static final String LOG_TAG = ForecastFragment.class.getName();
     private ForecastAdapter mForecastAdapter;
     private static final int LOADER_ID_FORECAST = 500;
     private int mPosition;
@@ -32,8 +35,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
             WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
             WeatherContract.LocationEntry.COLUMN_COORD_LONG
     };
@@ -43,8 +46,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_DESC = 2;
     static final int COL_WEATHER_MAX_TEMP = 3;
     static final int COL_WEATHER_MIN_TEMP = 4;
-    static final int COL_LOCATION_SETTING = 5;
-    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_WEATHER_CONDITION_ID = 5;
+    static final int COL_LOCATION_SETTING = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
 
@@ -67,22 +70,39 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_resfresh){
+        /*if(id == R.id.action_resfresh){
             updateWeather();
+            return true;
+        }else*/ if (id == R.id.action_map) {
+            openPreferredLocationInMap();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void updateWeather() {
-        /*Intent intentAlarm = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        intentAlarm.putExtra(SunshineService.LOCATION_QUERY_EXTRA,Utility.getPreferredLocation(getActivity()));
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intentAlarm, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis()+5000,pendingIntent);*/
         SunshineSyncAdapter.syncImmediately(getActivity());
+    }
 
+    private void openPreferredLocationInMap() {
+        if (null != mForecastAdapter){
+            Cursor c = mForecastAdapter.getCursor();
+            if(null != c){
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+
+                Uri geoLocation = Uri.parse("geo:"+posLat+","+posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+                if(intent.resolveActivity(getActivity().getPackageManager())!= null){
+                    startActivity(intent);
+                }else{
+                    Log.d(LOG_TAG, "Couldn't call " + posLat+" , "+posLong + ", no");
+                }
+            }
+        }
     }
 
     @Override
