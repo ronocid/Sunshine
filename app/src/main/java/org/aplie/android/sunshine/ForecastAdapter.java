@@ -68,8 +68,8 @@ public class ForecastAdapter extends CursorAdapter{
         viewHolder.imageWeather.setContentDescription(description);
         viewHolder.tvDate.setText(Utility.getFriendlyDayString(context,date));
         viewHolder.tvForecast.setText(description);
-        viewHolder.tvHight.setText(Utility.formatTemperature(context, max, isMetric));
-        viewHolder.tvLow.setText(Utility.formatTemperature(context,min,isMetric));
+        viewHolder.tvHight.setText(Utility.formatTemperature(context, max));
+        viewHolder.tvLow.setText(Utility.formatTemperature(context,min));
     }
 
     public static class ViewHolder{
