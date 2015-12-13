@@ -140,8 +140,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String friendlyDateText = Utility.getDayName(getActivity(), date);
         String dateString = Utility.getFormattedMonthDay(getActivity(), date);
         String weatherDescription = data.getString(COL_WEATHER_DESC);
-        String maxTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
-        String minTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+        String maxTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MAX_TEMP));
+        String minTemperature = Utility.formatTemperature(getActivity(), data.getDouble(COL_WEATHER_MIN_TEMP));
         String humidity = getActivity().getResources().getString(R.string.format_humidity,data.getFloat(COL_WEATHER_HUMDITY));
         String wind = Utility.getFormattedWind(getActivity(), data.getFloat(COL_WEATHER_WIND_SPEED), data.getFloat(COL_WEATHER_DEGRESS));
         String pressure = getActivity().getResources().getString(R.string.format_pressure,data.getFloat(COL_WEATHER_PRESSURE));
