@@ -39,6 +39,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 
@@ -52,13 +54,14 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
             WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_DATE
     };
-    // these indices must match the projection
     private static final int INDEX_WEATHER_ID = 0;
     private static final int INDEX_MAX_TEMP = 1;
     private static final int INDEX_MIN_TEMP = 2;
     private static final int INDEX_SHORT_DESC = 3;
+    private static final int INDEX_DATE = 4;
 
     public SunshineSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -211,7 +214,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
             long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
-            // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<ContentValues>(weatherArray.length());
 
             Time dayTime = new Time();
@@ -274,6 +276,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 cVVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI,cvArray);
 
+                deleteOldData();
                 notifyWeather();
             }
 
@@ -283,6 +286,20 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
+    }
+
+    private void deleteOldData() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        String yesterday = Long.toString(cal.getTimeInMillis());
+
+        String where = WeatherContract.WeatherEntry.COLUMN_DATE +" <= ?";
+        int regDelete = getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,where,new String[] {yesterday});
     }
 
     /**
