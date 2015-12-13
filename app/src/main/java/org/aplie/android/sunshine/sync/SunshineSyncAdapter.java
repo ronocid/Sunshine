@@ -431,6 +431,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     builder.setSmallIcon(iconId);
                     builder.setContentTitle(title);
                     builder.setContentText(contentText);
+                    builder.setAutoCancel(true);
 
                     Intent resutlIntent = new Intent(context, MainActivity.class);
 
