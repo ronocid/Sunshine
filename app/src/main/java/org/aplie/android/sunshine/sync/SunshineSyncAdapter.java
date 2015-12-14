@@ -299,7 +299,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         String yesterday = Long.toString(cal.getTimeInMillis());
 
         String where = WeatherContract.WeatherEntry.COLUMN_DATE +" <= ?";
-        int regDelete = getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,where,new String[] {yesterday});
+        getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,where,new String[] {yesterday});
     }
 
     /**
