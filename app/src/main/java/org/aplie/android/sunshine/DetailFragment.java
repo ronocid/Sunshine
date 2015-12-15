@@ -183,4 +183,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             getLoaderManager().restartLoader(LOADER_ID_DETAILS, null,this);
         }
     }
+
+    public void onMetricChanged(String location) {
+        Uri uri = mUri;
+        if(null != uri){
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updateUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(location,date);
+            mUri = updateUri;
+            getLoaderManager().restartLoader(LOADER_ID_DETAILS, null,this);
+        }
+    }
 }
