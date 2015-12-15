@@ -27,7 +27,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
     private ShareActionProvider mShareActionProvider;
-
     private String mForecast;
 
     private ImageView imageWeather;
@@ -130,11 +129,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        loadData(data);
+    }
+
+    private void loadData(Cursor data) {
         if(!data.moveToFirst()){
             return;
         }
-
-        boolean isMetric = Utility.isMetric(getActivity());
 
         long date = data.getLong(COL_WEATHER_DATE);
         String friendlyDateText = Utility.getDayName(getActivity(), date);
@@ -182,5 +183,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mUri = updateUri;
             getLoaderManager().restartLoader(LOADER_ID_DETAILS, null,this);
         }
+    }
+
+    public void onDefaultChanged(String location, long date) {
+        Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(location,date);
+        Cursor cursor = getActivity().getContentResolver().query(uri,FORECAST_COLUMNS,null,null,null);
+        loadData(cursor);
     }
 }

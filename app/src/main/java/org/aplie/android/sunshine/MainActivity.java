@@ -1,6 +1,7 @@
 package org.aplie.android.sunshine;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -110,6 +111,18 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         }else{
             Intent intent = new Intent(this, DetailActivity.class).setData(contentUri);
             startActivity(intent);
+        }
+    }
+
+    public boolean haveTwoPane(){
+        return mTwoPane;
+    }
+
+    @Override
+    public void defaultValue(String location, long date) {
+        DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+        if(null != df){
+            df.onDefaultChanged(location, date);
         }
     }
 }

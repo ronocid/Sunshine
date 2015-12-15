@@ -24,6 +24,7 @@ import org.aplie.android.sunshine.sync.SunshineSyncAdapter;
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SELECTED_KEY = "selected";
     private static final String LOG_TAG = ForecastFragment.class.getName();
+    public static final int DEFAULT_POSITION = 0;
     private ForecastAdapter mForecastAdapter;
     private static final int LOADER_ID_FORECAST = 500;
     private int mPosition;
@@ -147,7 +148,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         mForecastAdapter.swapCursor(cursor);
+
         if(mPosition != ListView.INVALID_POSITION){
+            /*if(mPosition==0){
+                loadDefaultValue();
+            }*/
             listView.smoothScrollToPosition(mPosition);
         }
     }
@@ -171,7 +176,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if(mPosition != ListView.INVALID_POSITION){
-            outState.putInt(SELECTED_KEY,mPosition);
+            outState.putInt(SELECTED_KEY, mPosition);
         }
         super.onSaveInstanceState(outState);
     }
@@ -185,5 +190,17 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public interface Callback{
         void onItemSelected(Uri dateUri);
+        void defaultValue(String location, long date);
+    }
+
+    private void loadDefaultValue(){
+        if(((MainActivity)getActivity()).haveTwoPane()){
+            listView.setItemChecked(DEFAULT_POSITION,true);
+            Cursor cursor = (Cursor)mForecastAdapter.getItem(0);
+            if (cursor != null && cursor.getCount() !=-1) {
+                String locationSetting = Utility.getPreferredLocation(getActivity());
+                ((Callback) getActivity()).defaultValue(locationSetting, cursor.getLong(COL_WEATHER_DATE));
+            }
+        }
     }
 }
