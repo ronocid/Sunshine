@@ -171,7 +171,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if(mPosition != ListView.INVALID_POSITION){
-            outState.putInt(SELECTED_KEY,mPosition);
+            outState.putInt(SELECTED_KEY, mPosition);
         }
         super.onSaveInstanceState(outState);
     }
@@ -181,6 +181,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mForecastAdapter != null) {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
+    }
+
+    public void onMetricChanged() {
+        getLoaderManager().restartLoader(LOADER_ID_FORECAST, null, this);
     }
 
     public interface Callback{

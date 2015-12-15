@@ -15,12 +15,14 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     private final String DETAILFRAGMENT_TAG = "DFTAG";
     private String mLocation;
     private boolean mTwoPane;
+    private boolean mIsMetric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "OnCreate");
+        mIsMetric = Utility.isMetric(this);
         mLocation = Utility.getPreferredLocation(this);
         if (findViewById(R.id.weather_detail_container) != null) {
             mTwoPane = true;
@@ -78,6 +80,19 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                 df.onLocationChanged(location);
             }
             mLocation = location;
+        }
+
+        boolean isMetric = Utility.isMetric(this);
+        if(isMetric != mIsMetric){
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if(null != ff){
+                ff.onMetricChanged();
+            }
+            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if(null != df){
+                df.onMetricChanged(mLocation);
+            }
+            mIsMetric = isMetric;
         }
     }
     @Override
