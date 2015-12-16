@@ -58,7 +58,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(LOG_TAG,"onCreate");
         setHasOptionsMenu(true);
     }
 
@@ -82,6 +82,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
+        Log.d(LOG_TAG,"updateWeather");
         SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
@@ -109,6 +110,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(LOG_TAG,"onCreateView");
         mForecastAdapter = new ForecastAdapter(getActivity(),null,0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -137,6 +139,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        Log.d(LOG_TAG,"onCreateLoader");
         String locationSetting = Utility.getPreferredLocation(getActivity());
 
         String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
@@ -147,34 +150,39 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.d(LOG_TAG,"onLoadFinished");
         mForecastAdapter.swapCursor(cursor);
 
         if(mPosition != ListView.INVALID_POSITION){
-            /*if(mPosition==0){
+            if(((MainActivity)getActivity()).isFirstShow()){
                 loadDefaultValue();
-            }*/
+            }
             listView.smoothScrollToPosition(mPosition);
         }
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
+        Log.d(LOG_TAG,"onLoaderReset");
         mForecastAdapter.swapCursor(null);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(LOG_TAG,"onActivityCreated");
         getLoaderManager().initLoader(LOADER_ID_FORECAST, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     public void onLocationChanged(){
+        Log.d(LOG_TAG,"onLocationChanged");
         updateWeather();
         getLoaderManager().restartLoader(LOADER_ID_FORECAST, null, this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(LOG_TAG,"onSaveInstanceState");
         if(mPosition != ListView.INVALID_POSITION){
             outState.putInt(SELECTED_KEY, mPosition);
         }
@@ -198,6 +206,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void loadDefaultValue(){
+        Log.d(LOG_TAG,"loadDefaultValue");
         if(((MainActivity)getActivity()).haveTwoPane()){
             listView.setItemChecked(DEFAULT_POSITION,true);
             Cursor cursor = (Cursor)mForecastAdapter.getItem(0);

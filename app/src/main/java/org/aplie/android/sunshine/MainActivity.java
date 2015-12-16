@@ -1,7 +1,6 @@
 package org.aplie.android.sunshine;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +16,14 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     private String mLocation;
     private boolean mTwoPane;
     private boolean mIsMetric;
+    private boolean mIsFirstShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "OnCreate");
+        mIsFirstShow = true;
         mIsMetric = Utility.isMetric(this);
         mLocation = Utility.getPreferredLocation(this);
         if (findViewById(R.id.weather_detail_container) != null) {
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if(null != ff){
                 ff.onLocationChanged();
+                mIsFirstShow = true;
             }
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
             if(null != df){
@@ -133,8 +135,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         return mTwoPane;
     }
 
+    public boolean isFirstShow(){return mIsFirstShow;}
+
     @Override
     public void defaultValue(String location, long date) {
+        mIsFirstShow = false;
         DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
         if(null != df){
             df.onDefaultChanged(location, date);
